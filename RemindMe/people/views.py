@@ -28,3 +28,12 @@ class PersonDetails(generics.GenericAPIView):
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
+
+    def list(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            queryset = User.objects.all().order_by('id')
+            serializer_class = UserSerializer(queryset, many=True)
+            return Response(serializer_class.data)
+        else:
+            content = {'Authentication Error': 'Please Login!'}
+            return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)

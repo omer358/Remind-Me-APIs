@@ -17,10 +17,8 @@ class PeopleList(generics.ListCreateAPIView):
             serializer_class = PeopleSerializer(queryset, many=True)
             return Response(serializer_class.data)
         else:
-            queryset = People.objects.all().order_by('registration_time')
-            serializer_class = PeopleSerializer(queryset, many=True)
-            return Response(serializer_class.data, status.HTTP_405_METHOD_NOT_ALLOWED)
-
+            content = {'Authentication Error': 'Please Login!'}
+            return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class PersonDetails(generics.GenericAPIView):

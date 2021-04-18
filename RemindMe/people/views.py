@@ -30,6 +30,11 @@ class PeopleDetails(generics.RetrieveUpdateDestroyAPIView):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        queryset = People.objects.get(pk=kwargs.get('pk'))
+        serializer_class = PeopleSerializer(queryset, context={'request': request})
+        return Response(serializer_class.data)
+
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all().order_by('id')
@@ -43,3 +48,8 @@ class UserList(generics.ListCreateAPIView):
         else:
             content = {'Authentication Error': 'Please Login!'}
             return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class UserDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

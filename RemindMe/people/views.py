@@ -10,8 +10,10 @@ from rest_framework.views import APIView
 from .models import People
 from .serializers import PeopleSerializer, UserSerializer
 
+content = {'Authentication Error': 'Please Login!'}
 
-class PeopleList(generics.ListCreateAPIView):
+
+class PeopleList(generics.ListAPIView):
     queryset = People.objects.all().order_by('registration_time')
     serializer_class = PeopleSerializer
 
@@ -22,18 +24,23 @@ class PeopleList(generics.ListCreateAPIView):
             print(request.build_absolute_uri())
             return Response(serializer_class.data)
         else:
-            content = {'Authentication Error': 'Please Login!'}
             return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
-class PeopleDetails(generics.RetrieveUpdateDestroyAPIView):
+class PeopleDetails(generics.RetrieveUpdateAPIView):
+    """
+    Shows the details about specific user
+    """
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        queryset = People.objects.get(pk=kwargs.get('pk'))
-        serializer_class = PeopleSerializer(queryset, context={'request': request})
-        return Response(serializer_class.data)
+        if request.user.is_authenticated:
+            queryset = People.objects.get(pk=kwargs.get('pk'))
+            serializer_class = PeopleSerializer(queryset, context={'request': request})
+            return Response(serializer_class.data)
+        else:
+            return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class UserList(generics.ListCreateAPIView):
@@ -46,7 +53,6 @@ class UserList(generics.ListCreateAPIView):
             serializer_class = UserSerializer(queryset, many=True)
             return Response(serializer_class.data)
         else:
-            content = {'Authentication Error': 'Please Login!'}
             return Response(content, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 

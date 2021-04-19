@@ -11,6 +11,7 @@ class People(models.Model):
     meeting_time = models.DateTimeField()
     registration_time = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(blank=True)
+    owner = models.ForeignKey('auth.User',on_delete=models.CASCADE, related_name='people')
 
     def __str__(self):
         return self.first_name + " " + self.second_name

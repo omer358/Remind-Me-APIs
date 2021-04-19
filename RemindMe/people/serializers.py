@@ -9,6 +9,7 @@ class PeopleSerializer(serializers.ModelSerializer):
     class Meta:
         model = People
         fields = '__all__'
+        owner = serializers.ReadOnlyField(source='owner.username')
 
 
 class UserSerializer(serializers.ModelSerializer):

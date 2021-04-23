@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework.authtoken',
     'people.apps.PeopleConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -67,13 +68,19 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}
+
 WSGI_APPLICATION = 'RemindMe.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-     'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Remind-Me',
         'USER': 'omer358',
@@ -119,5 +126,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'RemindMe/media')
-print("Media_root",MEDIA_ROOT)
+print("Media_root", MEDIA_ROOT)
 print(BASE_DIR)

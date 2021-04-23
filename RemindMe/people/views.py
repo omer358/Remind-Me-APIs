@@ -18,6 +18,12 @@ class PeopleList(generics.ListAPIView):
     serializer_class = PeopleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def list(self, request, *args, **kwargs):
+        queryset = People.objects.all().filter(owner=request.user.id).order_by('registration_time')
+        serializer_class = PeopleSerializer(queryset,many=True, context={'request': request})
+        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        return Response(serializer_class.data)
+
 
 class PeopleDetails(generics.RetrieveUpdateAPIView):
     """

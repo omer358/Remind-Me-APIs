@@ -18,8 +18,7 @@ class PeopleList(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         token = request.META['HTTP_AUTHORIZATION']
-        key = token.split(' ')[1]
-        _id = Token.objects.get(key=key)
+        _id = Token.objects.get(key=token)
         queryset = People.objects.all().filter(owner=_id.user_id).order_by('registration_time')
         serializer_class = PeopleSerializer(queryset, many=True, context={'request': request})
         return Response(serializer_class.data)

@@ -1,9 +1,7 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse, Http404
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, status, permissions
-from rest_framework.parsers import JSONParser
+from rest_framework import generics, permissions
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -16,12 +14,14 @@ content = {'Authentication Error': 'Please Login!'}
 class PeopleList(generics.ListAPIView):
     queryset = People.objects.all().order_by('registration_time')
     serializer_class = PeopleSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
 
     def list(self, request, *args, **kwargs):
-        queryset = People.objects.all().filter(owner=request.user.id).order_by('registration_time')
-        serializer_class = PeopleSerializer(queryset,many=True, context={'request': request})
-        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        token = request.META['HTTP_AUTHORIZATION']
+        key = token.split(' ')[1]
+        _id = Token.objects.get(key=key)
+        queryset = People.objects.all().filter(owner=_id.user_id).order_by('registration_time')
+        serializer_class = PeopleSerializer(queryset, many=True, context={'request': request})
         return Response(serializer_class.data)
 
 
@@ -31,7 +31,7 @@ class PeopleDetails(generics.RetrieveUpdateAPIView):
     """
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
 
 
 class UserList(generics.ListCreateAPIView):

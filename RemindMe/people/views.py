@@ -18,7 +18,7 @@ class PeopleList(generics.ListAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
 
     def list(self, request, *args, **kwargs):
-        token = request.GET.get('token')
+        token = request.query_params.get('token')
         _id = get_object_or_404(Token, key=token)
         queryset = People.objects.all().filter(owner=_id.user_id).order_by('registration_time')
         serializer_class = PeopleSerializer(queryset, many=True, context={'request': request})
@@ -34,7 +34,7 @@ class PeopleDetails(generics.RetrieveUpdateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
 
     def retrieve(self, request, *args, **kwargs):
-        token = request.GET.get('token')
+        token = request.query_params.get('token')
         _id = get_object_or_404(Token, key=token)
         queryset = People.objects.get(pk=_id.user_id)
         serializer_class = PeopleSerializer(queryset, context={'request': request})

@@ -7,9 +7,15 @@
   * Activate your virtual environment. 
   * Run: ```pip install -r requirement.txt``` to install  all the required packages
   * Create a Postgres database under the name **Remind-Me** and update the `DATABASE` dictanory in  `settings.py` to your own database configrations.
-  * Run ```python manage.py makemigrations``` & ```python manage.py migrate```. 
+  * Run ```python manage.py makemigrations``` & ```python manage.py migrate```.
+  * Create some users.
+  * Create a token for each user by runing ```manage.py drf_create_token <username>```
+  * Add some people to the database.
+  * In your request add the token as ```query_params``` like this:
+    - ```http://127.0.0.1:8000/people/?token=```
+  
 
-And that's it! you're ready to go.
+ That's it! you're ready to go.
 
 # Technologies
   * [Django Framework](https://djangoproject.com).

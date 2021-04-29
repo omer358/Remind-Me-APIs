@@ -1,12 +1,13 @@
 from django.urls import path, include
-from . import views
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path('people/', views.PeopleList.as_view()),
-    path('people/<int:pk>/', views.PeopleDetails.as_view()),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetails.as_view()),
-]
+from . import views
+from .views import PeopleViewSet, UsersViewSet
+
+router = DefaultRouter()
+router.register(r'people', PeopleViewSet, basename='people')
+router.register(r'users', UsersViewSet, basename='users')
+urlpatterns = router.urls
 
 urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),

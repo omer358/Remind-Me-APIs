@@ -14,4 +14,4 @@ class People(models.Model):
     owner = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='people')
 
     def __str__(self):
-        return self.first_name + " " + self.second_name
+        return f"{self.first_name} {self.second_name}"

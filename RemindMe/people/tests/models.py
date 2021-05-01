@@ -2,7 +2,7 @@ from django.core.files import File
 from django.test import TestCase
 from rest_framework.authtoken.admin import User
 
-from .models import People
+from ..models import People
 
 
 class PeopleTest(TestCase):
@@ -33,3 +33,4 @@ class PeopleTest(TestCase):
         self.assertEqual(
             mohamed_maki.second_name, "Maki")
         self.assertEqual(People.objects.count(), 2)
+
